@@ -24,7 +24,7 @@ Library.prototype.addBook = function(book) {
     }
   }
   this.bookShelf.push(book);
-  this.saveJsonLibrary;
+  this.saveJsonLibrary();
   return true;
 };
 
@@ -32,10 +32,10 @@ Library.prototype.removeBookByTitle = function(title) {
   for (var i = 0; i < this.bookShelf.length; i++) {
     if (this.bookShelf[i].title === title) {
       this.bookShelf.splice(i, 1);
-      this.saveJsonLibrary;
       return true;
     }
   }
+  this.saveJsonLibrary();
   return false
 };
 Library.prototype.removeBookByAuthor = function(authorName) {
@@ -47,6 +47,7 @@ Library.prototype.removeBookByAuthor = function(authorName) {
       removed = true;
     }
   }
+  this.saveJsonLibrary();
   return removed
 };
 
@@ -56,7 +57,7 @@ Library.prototype.getRandomBook = function() {
     return null;
 
   } else if (this.bookShelf.length > 0) {
-    this.saveJsonLibrary;
+    this.saveJsonLibrary();
     return random;
   };
 };
@@ -66,7 +67,7 @@ Library.prototype.getBookByTitle = function(title) {
   var titleArray = this.bookShelf.filter(function(item) {
     return item.title.toLowerCase().indexOf(title) > -1;
   });
-  this.saveJsonLibrary;
+  this.saveJsonLibrary();
   return titleArray;
 };
 
@@ -75,17 +76,19 @@ Library.prototype.getBookByAuthor = function(authorName) {
   var authorNameArray = this.bookShelf.filter(function(item) {
     return item.author.toLowerCase().indexOf(authorName) > -1;
   });
-  this.saveJsonLibrary;
+  this.saveJsonLibrary();
   return authorNameArray;
 };
 
 Library.prototype.addBooks = function(books) {
-  var addMultipleBooks = 0;
+  var addMultipleBooks = 0
   for (var i = 0; i < books.length; i++) {
-    if (this.addBook(books[i]));
-    this.saveJsonLibrary;
-    ++addMultipleBooks;
-  }
+    if (this.addBook(books[i])) {
+      ++addMultipleBooks;
+    };
+  };
+  this.saveJsonLibrary();
+
   return addMultipleBooks;
 };
 
@@ -97,7 +100,7 @@ Library.prototype.getAuthors = function() {
   result = result.filter(function(key, i) {
     return result.indexOf(key) == i
   });
-  this.saveJsonLibrary;
+  this.saveJsonLibrary();
   return result;
 };
 
@@ -107,7 +110,7 @@ Library.prototype.getRandomAuthorName = function() {
   if (this.bookShelf.length === 0) {
     return null;
   } else if (this.bookShelf.length > 0) {
-    this.saveJsonLibrary;
+    this.saveJsonLibrary();
     return rAuthor.author;
   };
 };
@@ -116,6 +119,7 @@ Library.prototype.getRandomAuthorName = function() {
 
 Library.prototype.saveJsonLibrary = function() {
   localStorage.setItem("stringifyLibrary", JSON.stringify(this.bookShelf));
+  console.log("storage set");
 };
 
 Library.prototype.jsonLibraryLoad = function() {
@@ -129,7 +133,10 @@ Library.prototype.jsonLibraryLoad = function() {
   }
 };
 
+
 document.addEventListener("DOMContentLoaded", function(e) {
 
   window.gLibrary = new Library();
+  gLibrary.jsonLibraryLoad();
+
 });
